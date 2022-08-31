@@ -49,5 +49,25 @@ read: async(req,res) => {
     }
 }        
 
+all: async (req, res) => {
+    let cities
+    let query = {}
+
+    //se arma un if por cada categoria del modelo que se pueda bsucar
+
+    if (req.query.population) {
+        query.population = req.query.population 
+    }
+
+
+    try{
+        cities = await City.find({
+            population : req.query.population
+        })
+        res.json(cities)
+
+    }catch (error) {}
+
+}
 
 module.exports = router;
