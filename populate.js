@@ -1,11 +1,16 @@
+require('dotenv').config()
 const City = require('./models/City')
 const db = require('./config/database')
 
-City.create({
+for(let i = 0; i < 20; i++){
 
-    city: "Córdoba",
-    country: "Argentine",
-    photo: "https://mochilaexpres.com/que-ver-en-cordoba-argentina/",
-    population: "5000000",
-    fundation: "1500",
-})
+    
+    City.create({
+        
+        city: "Buenos Aires",
+        country: "Argentine",
+        photo: "https://mochilaexpres.com/que-ver-en-cordoba-argentina/",
+        population: 5000000,
+        foundation: 1500,
+    })
+}

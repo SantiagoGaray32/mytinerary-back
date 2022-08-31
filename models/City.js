@@ -6,12 +6,12 @@ const Schema = new mongoose.Schema({
    country: {type: String, required: true},
    photo: {type: String, required: true},
    population: {type: Number, required: true},
-   fundation: {type: Number, required: true},
+   foundation: {type: Number, required: true},
 })
 
 const City = mongoose.model(
-    'Cities',
-    mongoose.Schema
+    'Cities', 
+    Schema
 )
 
 module.exports = City

@@ -1,7 +1,14 @@
 var express = require('express');
-const { read } = require('fs');
 var router = express.Router();
-const {create} = require('../controllers/cityController')
+const { read, destroy, updateCity } = require('../controllers/cityController');
+const {create} = require('../controllers/cityController');
+const {all} = require('../controllers/cityController')
 
-router.post('/', create)
+router.get('/',all)
 router.get('/:id',read)
+router.post('/', create)
+router.delete('/:id',destroy)
+router.put('/:id',updateCity)
+
+
+module.exports = router
