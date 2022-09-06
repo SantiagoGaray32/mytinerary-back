@@ -18,5 +18,5 @@ const tinerariesSchema = new mongoose.Schema({
   ],
 });
 
-const Tineraries = mongoose.model("tineraries", tinerariesSchema);
-module.exports = Tineraries;
+const itinerary = mongoose.model("tineraries", tinerariesSchema);
+module.exports = itinerary;
