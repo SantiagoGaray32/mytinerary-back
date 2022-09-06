@@ -3,7 +3,7 @@ const City = require("../models/City");
 
 const cityController = {
   create: async (req, res) => {
-    // const (city,country,photo,population,fundation) = req.body
+    console.log(req.body);    
     try {
       await new City(req.body).save();
       res.status(201).json({
@@ -11,6 +11,7 @@ const cityController = {
         success: true,
       });
     } catch (error) {
+      console.log(error);
       res.status(400).json({
         message: `couldt create city,  ${error}`,
         success: false,
