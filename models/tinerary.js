@@ -20,3 +20,8 @@ const tinerariesSchema = new mongoose.Schema({
 
 const itinerary = mongoose.model("tineraries", tinerariesSchema);
 module.exports = itinerary;
+  likes: { type: Array, required: true },
+});
+
+const itinerary = mongoose.model("tineraries", tinerariesSchema);
+module.exports = itinerary;
