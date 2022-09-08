@@ -1,5 +1,6 @@
-var express = require('express')
-var router = express.Router()
+var express = require("express");
+var router = express.Router();
+
 
 const { createItinerary,
      updateItinerary,
@@ -11,4 +12,5 @@ router.post('/', createItinerary)
 router.patch('/:id', updateItinerary)
 router.delete('/:id', destroyItinerary)
 
-module.exports = router
+
+module.exports = router;
