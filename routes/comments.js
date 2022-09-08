@@ -7,7 +7,7 @@ const { createComment,
       readFromUser} = require('../controllers/commentController')
 
       router.get('/city', readFromCities)
-      router.get('/query', readFromUser)
+      router.get('', readFromUser)
 router.post('/', createComment)
 router.get('/', all)
 
