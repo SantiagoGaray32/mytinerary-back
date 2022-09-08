@@ -20,6 +20,7 @@ const cityController = {
   },
   read: async (req, res) => {
     const { id } = req.params;
+    console.log("READ BY ID", id);
     try {
       let city = await City.findOne({ _id: id });
       if (city) {
