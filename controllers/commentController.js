@@ -1,7 +1,6 @@
 const { response } = require("express");
-const City = require("../models/City");
 const Comment = require("../models/comment");
-const itinerary = require("../models/tinerary");
+
 
 
 const commentController = {
@@ -35,7 +34,7 @@ const commentController = {
         }
     },
     readFromCities: async (req, res) => {
-        let query = {} //Id de la ciudad
+        let query = {} 
 
         if (req.query.itinerary) {
             query.itinerary = req.query.itinerary
@@ -43,7 +42,7 @@ const commentController = {
 
         try {
             let comments = await Comment.find({itinerary : query.itinerary}).populate('user', {name:1})
-            // .populate('itinerary', {city:1, country:1})
+            
 
             if (comments) {
                 res.status(200).json({
