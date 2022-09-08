@@ -19,16 +19,19 @@ const itineraryController = {
   },
   readFromCity: async (req, res) => { // lee los itinerarios segun la ID que le pasemos (city)
       let query = {}
-      if (req.query.itinerary) {
-          query.itinerary = req.query.itinerary
+      if (req.query.city) {
+          query.city = req.query.city
       }
+      if (req.query.user) {
+        query.userName = req.query.user
+    }
       try {
-          let itineraries = await itinerary.find({itinerary : query.itinerary}).populate('user', {name:1})
+          let itineraries = await itinerary.find(query)
           // .populate('itinerary', {city:1, country:1})
 
           if (itineraries) {
               res.status(200).json({
-                  message: "you get itineraries from city",
+                  message: "you get itineraries ",
                   response: itineraries,
                   success: true
               })
@@ -47,7 +50,6 @@ const itineraryController = {
       }
 
   },
-
   updateItinerary: async (req, res) => {
     const { id } = req.params;
     try {
