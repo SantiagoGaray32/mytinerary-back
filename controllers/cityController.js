@@ -3,7 +3,9 @@ const City = require("../models/City");
 
 const cityController = {
   create: async (req, res) => {
+
     console.log(req.body);
+
     try {
       await new City(req.body).save();
       res.status(201).json({
@@ -47,7 +49,9 @@ const cityController = {
   all: async (req, res) => {
     let cities;
     let query = {};
+
     console.log("ALL QUERY =>", req.query);
+
 
     if (req.query.city) {
       query.city = req.query.city;
