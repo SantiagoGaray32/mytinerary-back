@@ -2,6 +2,6 @@ var express = require('express');
 var router = express.Router();
 const {createUser} = require("../controllers/userController")
 
-router.post('/auth', createUser)
+router.post('/auth', createUser) // BARRA SOLA
 
 module.exports = router;

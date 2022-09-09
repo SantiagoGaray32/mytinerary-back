@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.use("/cities", cityRouter);
-router.use("/users", userRouter);
+router.use("/users", userRouter); // CDORREGIR POR /AUTH 
 router.use("/itineraries", itineraryRouter);
 router.use("/comments", commentRouter);
 router.use("/activities", activityRouter)

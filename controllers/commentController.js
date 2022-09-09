@@ -33,7 +33,7 @@ const commentController = {
             res.status(500).json()
         }
     },
-    readFromCities: async (req, res) => {
+    readFromCities: async (req, res) => { // CORREGIR Y CAMBIAR POR ITINERARY
         let query = {} 
 
         if (req.query.itinerary) {

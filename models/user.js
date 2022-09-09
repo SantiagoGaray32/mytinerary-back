@@ -7,7 +7,6 @@ const usersSchema = new mongoose.Schema({
   password: [{ type: String, required: true }],
   userPhoto: { type: String, required: true },
   country: { type: String, required: true },
-  from: { type: Array },
   uniqueString: { type: String, required: true },
   verification: { type: Boolean, required: true },
 });
