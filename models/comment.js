@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
     ref:'users',
     required: true},
     itinerary: { type: mongoose.Types.ObjectId,
-    ref: 'Cities',
+    ref: 'Cities', // CORREGIR Y CAMBIAR POR ITINERARY
     required: true
     },
 
