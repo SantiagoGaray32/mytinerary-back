@@ -67,7 +67,7 @@ const cityController = {
     }
 
     if (req.query.type) {
-      const regexp = new RegExp("^" + req.query.name);
+      const regexp = new RegExp("^" + req.query.name,"i"); // con la i le decimos que sea insensitive al stirng
       if (req.query.type === "city") {
         query.city = regexp;
       } else {
