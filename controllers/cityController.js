@@ -5,9 +5,10 @@ const cityController = {
     console.log(req.body);
 
     try {
-      await new City(req.body).save();
+      let city = await new City(req.body).save();
       res.status(201).json({
         message: "city created",
+        response: city._id,
         success: true,
       });
     } catch (error) {

@@ -209,5 +209,30 @@ const authController = {
       });
     }
   },
+  signOut: async (req, res) => {
+    const { id } = req.params;
+    let user = await User.findOne({ _id: id });
+    try {
+      if (user) {
+        user.logged = false;
+        await user.save();
+        res.status(200).json({
+          message: "User logout",
+          success: true,
+        });
+      } else {
+        res.status(404).json({
+          message: "User not found",
+          success: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({
+        message: "Error",
+        success: false,
+      });
+    }
+  },
 };
 module.exports = authController;
