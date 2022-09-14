@@ -1,9 +1,7 @@
-const { update } = require("../models/City"); //borrar
 const City = require("../models/City");
 
 const cityController = {
   create: async (req, res) => {
-
     console.log(req.body);
 
     try {
@@ -52,7 +50,6 @@ const cityController = {
 
     console.log("ALL QUERY =>", req.query);
 
-
     if (req.query.city) {
       query.city = req.query.city;
     }
@@ -67,7 +64,7 @@ const cityController = {
     }
 
     if (req.query.type) {
-      const regexp = new RegExp("^" + req.query.name,"i"); // con la i le decimos que sea insensitive al stirng
+      const regexp = new RegExp("^" + req.query.name, "i"); // con la i le decimos que sea insensitive al stirng
       if (req.query.type === "city") {
         query.city = regexp;
       } else {

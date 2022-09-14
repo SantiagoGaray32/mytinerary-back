@@ -209,7 +209,5 @@ const authController = {
       });
     }
   },
-
-  // signOut: async () => {},
 };
 module.exports = authController;
