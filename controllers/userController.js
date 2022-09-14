@@ -140,6 +140,7 @@ const authController = {
           if (checkPass.length > 0) {
             // si contraseña coincide
 
+
             const loginUser = {
               id: user._id,
               name: user.name,
@@ -151,6 +152,7 @@ const authController = {
 
             user.logged = true;
             await user.save();
+
             res.status(200).json({
               message: "Welcome " + user.name,
               response: { user: loginUser },
@@ -204,6 +206,32 @@ const authController = {
       console.log(error);
       res.status(400).json({
         message: "Sign in error, try again later",
+        success: false,
+      });
+    }
+  },
+
+  signOut: async (req, res) => {
+    const { id } = req.params;
+    let user = await User.findOne({ _id: id });
+    try {
+      if (user) {
+        user.logged = false;
+        await user.save();
+        res.status(200).json({
+          message: "User logout",
+          success: true,
+        });
+      } else {
+        res.status(404).json({
+          message: "User not found",
+          success: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({
+        message: "Error",
         success: false,
       });
     }
