@@ -113,6 +113,7 @@ const authController = {
         message: "could't verify account",
         success: false,
       });
+
     }
   },
 
@@ -139,7 +140,6 @@ const authController = {
 
           if (checkPass.length > 0) {
             // si contraseña coincide
-
 
             const loginUser = {
               id: user._id,
