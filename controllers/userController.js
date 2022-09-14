@@ -151,7 +151,6 @@ const authController = {
 
             user.logged = true;
             await user.save();
-
             res.status(200).json({
               message: "Welcome " + user.name,
               response: { user: loginUser },
@@ -209,5 +208,6 @@ const authController = {
       });
     }
   },
+
 };
 module.exports = authController;
