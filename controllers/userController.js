@@ -113,7 +113,6 @@ const authController = {
         message: "could't verify account",
         success: false,
       });
-
     }
   },
 
@@ -210,7 +209,6 @@ const authController = {
       });
     }
   },
-
   signOut: async (req, res) => {
     const { id } = req.params;
     let user = await User.findOne({ _id: id });
@@ -236,6 +234,5 @@ const authController = {
       });
     }
   },
-
 };
 module.exports = authController;
