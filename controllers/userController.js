@@ -2,6 +2,23 @@ const User = require("../models/user");
 const crypto = require("crypto");
 const bcryptjs = require("bcryptjs"); // este es un recurso de node.js para hashear la contraseñar (ocultar)
 const sendMail = require("./sendMail");
+const Joi = require("joi")
+
+const validator = Joi.object({
+  name: Joi.string().required(),
+  lastName: Joi.string().required(),
+  country: Joi.string().required(),
+  email: Joi.string().email().required(),
+  pass: Joi.string().required(),
+  photo: Joi.string()
+    .uri()
+    .messages({
+      "string.uri": "INVALID_URL",
+    })
+    .required(),
+  role: Joi.string().required(),
+  from: Joi.string().required(),
+})
 
 const authController = {
   signUp: async (req, res) => {
@@ -16,6 +33,7 @@ const authController = {
       from, // el from tiene que venir desde el front-end para avisarle al metodo desde donde se crea el usuario.
     } = req.body;
     try {
+      await userValidator.validateAsync(req.body)
       let user = await User.findOne({ email });
       if (!user) {
         let logged = false;
