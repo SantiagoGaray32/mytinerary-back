@@ -18,8 +18,6 @@ const authController = {
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        let logged = false;
-        let verification = false;
         let code = crypto.randomBytes(15).toString("hex");
         if (from === "form") {
           // si la data viene del formulario de registro
@@ -33,11 +31,12 @@ const authController = {
             country,
             role,
             from: [from],
-            logged,
+            logged: false,
             code,
-            verification,
+            verification: false,
           }).save();
-          sendMail(email, code);
+
+          //sendMail(email, code); //CHEQUEAR ESTO
           res.status(201).json({
             message: "user signed up from form",
             success: true,
@@ -45,7 +44,7 @@ const authController = {
         } else {
           // si viene de las redes sociales (cualquier red social)
           password = bcryptjs.hashSync(password, 10);
-          verification = true;
+
           user = await new User({
             name,
             lastName,
@@ -55,9 +54,9 @@ const authController = {
             country,
             role,
             from: [from],
-            logged,
+            logged: false,
             code,
-            verification,
+            verification: true,
           }).save();
           // no hace falta el mail de verificacion,
           res.status(201).json({
@@ -72,11 +71,11 @@ const authController = {
           res.status(200).json({
             //200 a estudiar/confirmar con google
             message: "user already exists",
-            succes: false,
+            success: false,
           });
         } else {
           user.from.push(from);
-          user.verified = true;
+          user.verification = true;
           user.password.push(bcryptjs.hashSync(password, 10));
           await user.save();
           res.status(201).json({
@@ -117,7 +116,7 @@ const authController = {
   },
 
   signIn: async (req, res) => {
-    let { email, password, from } = req.body;
+    const { email, password, from } = req.body;
 
     let user = await User.findOne({ email });
 
@@ -127,7 +126,7 @@ const authController = {
           message: "User doesn't exists, please sign up",
           success: false,
         });
-      } else if (user.verified) {
+      } else if (user.verification) {
         // si usuario existe y esta verificado
 
         const checkPass = user.password.filter((pass) =>
@@ -139,7 +138,6 @@ const authController = {
 
           if (checkPass.length > 0) {
             // si contraseña coincide
-
             const loginUser = {
               id: user._id,
               name: user.name,
