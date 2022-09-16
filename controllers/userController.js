@@ -2,6 +2,23 @@ const User = require("../models/user");
 const crypto = require("crypto");
 const bcryptjs = require("bcryptjs"); // este es un recurso de node.js para hashear la contraseñar (ocultar)
 const sendMail = require("./sendMail");
+const Joi = require("joi")
+
+const validator = Joi.object({
+  name: Joi.string().required(),
+  lastName: Joi.string().required(),
+  country: Joi.string().required(),
+  email: Joi.string().email().required(),
+  pass: Joi.string().required(),
+  photo: Joi.string()
+    .uri()
+    .messages({
+      "string.uri": "INVALID_URL",
+    })
+    .required(),
+  role: Joi.string().required(),
+  from: Joi.string().required(),
+})
 
 const authController = {
   signUp: async (req, res) => {
@@ -16,10 +33,9 @@ const authController = {
       from, // el from tiene que venir desde el front-end para avisarle al metodo desde donde se crea el usuario.
     } = req.body;
     try {
+      await userValidator.validateAsync(req.body)
       let user = await User.findOne({ email });
       if (!user) {
-        let logged = false;
-        let verification = false;
         let code = crypto.randomBytes(15).toString("hex");
         if (from === "form") {
           // si la data viene del formulario de registro
@@ -33,11 +49,12 @@ const authController = {
             country,
             role,
             from: [from],
-            logged,
+            logged: false,
             code,
-            verification,
+            verification: false,
           }).save();
-          sendMail(email, code);
+
+          //sendMail(email, code); //CHEQUEAR ESTO
           res.status(201).json({
             message: "user signed up from form",
             success: true,
@@ -45,7 +62,7 @@ const authController = {
         } else {
           // si viene de las redes sociales (cualquier red social)
           password = bcryptjs.hashSync(password, 10);
-          verification = true;
+
           user = await new User({
             name,
             lastName,
@@ -55,9 +72,9 @@ const authController = {
             country,
             role,
             from: [from],
-            logged,
+            logged: false,
             code,
-            verification,
+            verification: true,
           }).save();
           // no hace falta el mail de verificacion,
           res.status(201).json({
@@ -72,11 +89,11 @@ const authController = {
           res.status(200).json({
             //200 a estudiar/confirmar con google
             message: "user already exists",
-            succes: false,
+            success: false,
           });
         } else {
           user.from.push(from);
-          user.verified = true;
+          user.verification = true;
           user.password.push(bcryptjs.hashSync(password, 10));
           await user.save();
           res.status(201).json({
@@ -113,12 +130,11 @@ const authController = {
         message: "could't verify account",
         success: false,
       });
-
     }
   },
 
   signIn: async (req, res) => {
-    let { email, password, from } = req.body;
+    const { email, password, from } = req.body;
 
     let user = await User.findOne({ email });
 
@@ -128,7 +144,7 @@ const authController = {
           message: "User doesn't exists, please sign up",
           success: false,
         });
-      } else if (user.verified) {
+      } else if (user.verification) {
         // si usuario existe y esta verificado
 
         const checkPass = user.password.filter((pass) =>
@@ -140,7 +156,6 @@ const authController = {
 
           if (checkPass.length > 0) {
             // si contraseña coincide
-
             const loginUser = {
               id: user._id,
               name: user.name,
@@ -210,7 +225,6 @@ const authController = {
       });
     }
   },
-
   signOut: async (req, res) => {
     const { id } = req.params;
     let user = await User.findOne({ _id: id });
@@ -236,6 +250,5 @@ const authController = {
       });
     }
   },
-
 };
 module.exports = authController;
