@@ -6,9 +6,11 @@ const {
   updateItinerary,
   destroyItinerary,
   readFromCity,
+  readFromUserId,
 } = require("../controllers/itineraryController");
 
 router.get("/", readFromCity);
+router.get("/:userId", readFromUserId);
 router.post("/", createItinerary);
 router.patch("/:id", updateItinerary);
 router.delete("/:id", destroyItinerary);
