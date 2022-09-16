@@ -1,24 +1,23 @@
 const Joi = require("joi");
 const itinerary = require("../models/tinerary");
+const Users = require("../models/user");
 
 const itineraryValidator = Joi.object({
   city: Joi.string().required(),
- userName: Joi.string().required(),
- itinerary: Joi.string().required(),
- price: Joi.number().required(),
- tags: Joi.array().required(),
- duration: Joi.number()
- .integer()
- .messages({
-   "number.integer": "INVALID_NUMBER",
- }),
- likes: Joi.array().required(),
+  userName: Joi.string().required(),
+  itinerary: Joi.string().required(),
+  price: Joi.number().required(),
+  tags: Joi.array().required(),
+  duration: Joi.number().integer().messages({
+    "number.integer": "INVALID_NUMBER",
+  }),
+  likes: Joi.array().required(),
 });
 
 const itineraryController = {
-  createItinerary: async (req, res) => {   
+  createItinerary: async (req, res) => {
     try {
-      await itineraryValidator.validateAsync(req.body)
+      await itineraryValidator.validateAsync(req.body);
       await new itinerary(req.body).save();
       res.status(201).json({
         message: "Itinerary created",
@@ -32,43 +31,80 @@ const itineraryController = {
       });
     }
   },
-  readFromCity: async (req, res) => { // lee los itinerarios segun la ID que le pasemos (city)
-      let query = {}
-      if (req.query.city) {
-          query.city = req.query.city
-      }
-      if (req.query.user) {
-        query.userName = req.query.user
+  readFromUserId: async (req, res) => {
+    console.log("read from user id", req.params, req.query);
+    let query = {};
+    // Lo ideal sería que el modelo de Itinerarios tenga la referencia
+    // del ObjectId del usuario, de esta forma podemos ir a buscar a la DB
+    // Por user id, NOTA: Tenes que volver a cargar la data en la DB con esa referencia.
+    if (req.params.userId) {
+      query.userName = req.params.userId;
     }
-      try {
-          let itineraries = await itinerary.find(query)
-          // .populate('itinerary', {city:1, country:1})
+    console.log(query);
+    try {
+      let itineraries = await itinerary.find(query);
+      console.log(itineraries);
+      // .populate('itinerary', {city:1, country:1})
 
-          if (itineraries) {
-              res.status(200).json({
-                  message: "you get itineraries ",
-                  response: itineraries,
-                  success: true
-              })
-
-          }else {
-              res.status(404).json({
-                  message: "could't find itineraries"
-              })
-          }
-      }catch (error) {
-          console.log(error);
-          res.status(400).json({
-              message: "error",
-              success: false
-          })
+      if (itineraries) {
+        res.status(200).json({
+          message: "you get itineraries",
+          response: itineraries,
+          success: true,
+        });
+      } else {
+        res.status(404).json({
+          message: "could't find itineraries",
+        });
       }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({
+        message: "error",
+        success: false,
+      });
+    }
+  },
+  readFromCity: async (req, res) => {
+    // lee los itinerarios segun la ID que le pasemos (city)
+    let query = {};
+    if (req.query.city) {
+      query.city = req.query.city;
+    }
+    if (req.query.user) {
+      query.userName = req.query.user;
+    }
 
+    try {
+      let itineraries = await itinerary.find(query);
+      // .populate('itinerary', {city:1, country:1})
+
+      if (itineraries) {
+        res.status(200).json({
+          message: "you get itineraries ",
+          response: itineraries,
+          success: true,
+        });
+      } else {
+        res.status(404).json({
+          message: "could't find itineraries",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({
+        message: "error",
+        success: false,
+      });
+    }
   },
   updateItinerary: async (req, res) => {
     const { id } = req.params;
     try {
-      let ItineraryUpdate = await itinerary.findOneAndUpdate({ _id: id }, req.body);
+      let ItineraryUpdate = await itinerary.findOneAndUpdate(
+        { _id: id },
+        req.body
+      );
       if (ItineraryUpdate) {
         res.status(200).json({
           message: "you have update the itinerary",
