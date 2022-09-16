@@ -3,7 +3,7 @@ const { google } = require ('googleapis')
 const OAuth2 = google.auth.OAuth2
 const {GOOGLE_ID,GOOGLE_REFRESH,GOOGLE_SECRET,GOOGLE_URL,USER} = process.env
 
-const sendMail = async(mail,code) => {
+const sendMail = async(email,code) => {
 
     const client = new OAuth2(
       process.env.GOOGLE_ID,
@@ -34,10 +34,10 @@ const sendMail = async(mail,code) => {
 
     const mailOptions = {
         from: USER,
-        to: mail,
+        to: email,
         subject: 'verify mytinerary account',
         html: `<div>
-                    <h1>Hi ${mail} please verify your account</h1>
+                    <h1>Hi ${email} please verify your account</h1>
                     <a href='https://localhost:4000/auth/verify/${code}'>Click to verify</a>
                 </div>
         

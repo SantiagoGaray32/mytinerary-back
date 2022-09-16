@@ -54,7 +54,7 @@ const authController = {
             verification: false,
           }).save();
 
-          //sendMail(email, code); //CHEQUEAR ESTO
+          sendMail(email, code); //CHEQUEAR ESTO
           res.status(201).json({
             message: "user signed up from form",
             success: true,
