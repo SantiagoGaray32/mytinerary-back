@@ -1,11 +1,11 @@
 const City = require("../models/City");
 const Joi = require("joi")
 
-const validator = Joi.object({
+const validator = Joi.object({ // investigar los mensajes segun la propiedad que apliquemos
     "city":Joi.string().min(4).max(30)
     .messages({"string":"INVALID_NAME_CITY"}),
     "country":Joi.string()
-    .messages({"string":"INVALID_NAME_COUNTRY"}),
+    .messages({"string.":"INVALID_NAME_COUNTRY"}),
     "photo" :Joi.string().uri()
     .messages({"string.uri":"INVALID_URL"}),
     "population":Joi.number().integer().min(1000).max(100000000)
