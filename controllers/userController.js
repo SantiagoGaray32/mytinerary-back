@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const bcryptjs = require("bcryptjs"); // este es un recurso de node.js para hashear la contraseñar (ocultar)
 const sendMail = require("./sendMail");
 const Joi = require("joi");
+const jwt = require('jsonwebtoken')
+
 
 const validator = Joi.object({
   name: Joi.string().required(),
@@ -136,9 +138,9 @@ const authController = {
   signIn: async (req, res) => {
     const { email, password, from } = req.body;
 
-    let user = await User.findOne({ email });
-
+    
     try {
+      let user = await User.findOne({ email }); 
       if (!user) {
         res.status(404).json({
           message: "User doesn't exists, please sign up",
@@ -164,13 +166,13 @@ const authController = {
               photo: user.userPhoto,
               role: user.role,
             };
-
             user.logged = true;
             await user.save();
-
+            const token = jwt.sign({id: user._id}, process.env.KEY_JWT, { expiresIn: 60*60*24} )
             res.status(200).json({
               message: "Welcome " + user.name,
-              response: { user: loginUser },
+              response: { user: loginUser,
+                          token: token  },
               success: true,
             });
           } else {
@@ -196,10 +198,11 @@ const authController = {
 
             user.logged = true;
             await user.save();
-
+            const token = jwt.sign({id: user._id}, process.env.KEY_JWT, { expiresIn: 60*60*24} )
             res.status(200).json({
               message: "Welcome " + user.name,
-              response: { user: loginUser },
+              response: { user: loginUser,
+                          token: token },
               success: true,
             });
           } else {
@@ -225,6 +228,43 @@ const authController = {
       });
     }
   },
+  signInWithToken:(req, res) => {
+    if (req.user!==null) {
+      res.status(200).json({
+        success: true,
+        response: {user: req.user},
+        message: 'Welcome ' + req.user.name+'!'
+      })
+    } else {
+      res.status(400).json({
+        succes: false,
+        message: 'error'
+      })
+    }
+  },
+
+  editProfile: async (req,res) => {
+    const { id } = req.params
+    try{
+      const newUpdateProfile = req.body
+      let user = await User.findOne({_id: id})
+
+      if(user){
+        const updateProfile = await User.findByIdAndUpdate(id,newUpdateProfile)
+        res.status(200).json({
+          message: updateProfile.name + ': Your profile has been updated',
+          success: true
+        })
+      }
+    }catch(error) {
+      console.log(error);
+      res.status(400).json({
+        message: 'error',
+        success: false
+      })
+    }
+  },
+  
   signOut: async (req, res) => {
     const { id } = req.params;
     let user = await User.findOne({ _id: id });
