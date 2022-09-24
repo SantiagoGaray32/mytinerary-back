@@ -148,6 +148,45 @@ const itineraryController = {
       });
     }
   },
-};
+
+  likeDislike : async (req,res) => {
+    let {itineraryId} = req.params;
+    let {id} = req.user 
+    console.log("user", req.body);
+
+    try {
+
+      let likedItinerary = await itinerary.findOne({_id: itineraryId})
+
+      if(likedItinerary && likedItinerary.likes.includes(id)) {
+        likedItinerary.likes.pull(id);
+        await likedItinerary.save();
+        res.status(200).json({
+          message: "itinerary disliked",
+          success: true,
+        })
+      } else if (!likedItinerary.likes.includes(id)){
+        likedItinerary.likes.push(id);
+        await likedItinerary.save();
+        res.status(200).json({
+          message: "itinerary liked",
+          success: true,
+        })
+      } else {
+        res.status(404).json({
+          message: "city not found",
+          success: true,
+        })
+      }
+
+    }catch (error) {
+      console.log(error);
+      res.status(400).json({
+        message: "error",
+        success: false,
+      })
+  }
+}
+}
 
 module.exports = itineraryController;
