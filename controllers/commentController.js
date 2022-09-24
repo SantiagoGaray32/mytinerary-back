@@ -38,39 +38,6 @@ const commentController = {
       res.status(500).json();
     }
   },
-  readFromCities: async (req, res) => {
-    // CORREGIR Y CAMBIAR POR ITINERARY
-    console.log("ME LLAMO EN READ FROM CITIES");
-    let query = {};
-
-    if (req.query.itinerary) {
-      query.itinerary = req.query.itinerary;
-    }
-
-    try {
-      let comments = await Comment.find({
-        itinerary: query.itinerary,
-      }).populate("user", { name: 1 });
-
-      if (comments) {
-        res.status(200).json({
-          message: "you get comments",
-          response: comments,
-          success: true,
-        });
-      } else {
-        res.status(404).json({
-          message: "could't find comments",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(400).json({
-        message: "error",
-        success: false,
-      });
-    }
-  },
   readFromUser: async (req, res) => {
     let query = {};
 
@@ -101,5 +68,62 @@ const commentController = {
       });
     }
   },
+  deleteComment: async (req,res) => {
+
+    const { id } = req.params
+
+    try{
+      let myComment = await Comment.findOne({_id: id})
+
+      if(!myComment) {
+        res.status(404).json({
+          message: 'Comment Not Found, cannot be Deleted',
+          success:false
+        })
+      } else {
+        let myCommentDeleted = await Comment.findByIdAndDelete(id)
+        res.status(200).json({
+          message: 'comment has been deleted',
+          success:true
+        })
+      }
+ 
+    } catch (error) {
+      console.log(error)
+      res.status(400).json({
+        message: error.message ,
+        succes: false 
+      })
+    }
+  },
+
+  editComment: async (req, res) => {
+    const {id} = req.params
+
+    try{
+      const editComment = req.body
+      let commentForEdit = await Comment.findOne({_id: id})
+
+      if (!commentForEdit) {
+        res.status(200).json({
+          message: "please review your edit request",
+          success:false
+        })
+
+      } else {
+        const commentEdit = await Comment.findByIdAndUpdate(id, editComment)
+        res.status(200).json({
+          message: "Your Comment has been edited",
+          success: true
+        })
+      }
+    } catch(error){
+      console.log(error);
+      res.status(400).json({
+        message: "error",
+        success:false
+      })
+    }
+  }
 };
 module.exports = commentController;
