@@ -16,6 +16,6 @@ router.post("/signin", signIn);
 router.get("verify/:code", verifyMail);
 router.put("/signOut/:id", signOut);
 router.get("/token", passport.authenticate('jwt',{session:false}), signInWithToken);
-router.patch('update/:id', editProfile)
+router.patch('/:id',passport.authenticate('jwt',{session:false}), editProfile)
 
 module.exports = router;

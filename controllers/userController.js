@@ -246,7 +246,7 @@ const authController = {
   editProfile: async (req,res) => {
     const { id } = req.params
     try{
-      const newUpdateProfile = req.body
+      const newUpdateProfile = req.user.id
       let user = await User.findOne({_id: id})
 
       if(user){

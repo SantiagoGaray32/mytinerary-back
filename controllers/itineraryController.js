@@ -151,7 +151,7 @@ const itineraryController = {
 
   likeDislike : async (req,res) => {
     let {itineraryId} = req.params;
-    let {id} = req.user 
+    let {id} = req.user.id 
     console.log("user", req.body);
 
     try {
@@ -178,7 +178,6 @@ const itineraryController = {
           success: true,
         })
       }
-
     }catch (error) {
       console.log(error);
       res.status(400).json({
